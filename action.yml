@@ -1,0 +1,21 @@
+name: 'check commit'
+description: 'Greet someone'
+inputs:
+  commit-message:
+    description: 'git push commit message'
+    required: true
+    default: 'dev'
+outputs:
+  test-output:
+    description: "Random number"
+    value: ${{ steps.random-number-generator.outputs.random-number }}
+runs:
+  using: "composite"
+  steps:
+    - id: random-number-generator
+      run: echo "random-number=$(echo $RANDOM)" >> $GITHUB_OUTPUT
+      shell: bash
+    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+      shell: bash
+    - run: test.sh ${{ inputs.commit-message }}
+      shell: bash
